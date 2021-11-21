@@ -2,9 +2,9 @@ import express from "express";
 import "dotenv-safe/config";
 import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 
-const main = async () => {
-  const app = express();
+export const app = express();
 
+const main = async () => {
   const connection = await createTypeOrmConnection();
   await connection.runMigrations();
 
