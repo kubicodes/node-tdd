@@ -1,0 +1,29 @@
+[
+  {
+    "name": "development"
+    "type": 
+    "host": 
+    "port": 
+    "username": 
+    "password": 
+    "database": 
+    "logging": true
+    "synchronize": false
+    "entities": ["dist/migrations/*.js"]
+    "migrations": ["dist/migrations/*.js"]
+  },
+  {
+    "name": "test"
+    "type": 
+    "host": 
+    "port": 
+    "username": 
+    "password": 
+    "dropSchema": true
+    "logging": false
+    "synchronize": false
+    "database": 
+    "entities": ["dist/entities/*.js"],
+    "migrations": ["dist/migrations/*.js"]
+  }
+]

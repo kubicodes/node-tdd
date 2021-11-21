@@ -108,3 +108,6 @@ dist
 
 #Client -> just for testing purposes
 client
+
+#ORM Config
+ormconfig.json

@@ -1,8 +1,12 @@
 import express from "express";
 import "dotenv-safe/config";
+import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 
-const main = () => {
+const main = async () => {
   const app = express();
+
+  const connection = await createTypeOrmConnection();
+  await connection.runMigrations();
 
   const port = process.env.PORT;
   app.listen(port, () => {
@@ -10,4 +14,4 @@ const main = () => {
   });
 };
 
-main();
+main().catch((error) => console.log(error));
