@@ -1,18 +1,21 @@
 import { app } from "../src/index";
 import { createTypeOrmConnection } from "../src/utils/createTypeOrmConnection";
 import * as request from "supertest";
+import { User } from "../src/entities/User";
 
 beforeAll(async () => {
   await createTypeOrmConnection();
 });
 
 describe("User Registration", () => {
+  const validUserData = {
+    username: "user1",
+    email: "user1@user.com",
+    password: "12345678",
+  };
+
   const validUserRequest = () => {
-    return request(app).post("/api/v1/users").send({
-      username: "user1",
-      email: "user1@user.com",
-      password: "12345678",
-    });
+    return request(app).post("/api/v1/users").send(validUserData);
   };
 
   it("returns status code 200 when signup request is valid", async () => {
@@ -24,6 +27,31 @@ describe("User Registration", () => {
   it("returns success message when signup request is valid", async () => {
     const response = await validUserRequest();
 
-    expect(response.body?.message).not.toBeUndefined();
+    const lowerCaseBodyMessage = (
+      response.body?.message as string
+    ).toLocaleLowerCase();
+
+    expect(lowerCaseBodyMessage).not.toBeUndefined();
+    expect(lowerCaseBodyMessage).not.toContain("error");
+  });
+
+  it("saves the user to the database", async () => {
+    const userList = await User.find({});
+    expect(userList.length).toBe(1);
+  });
+
+  it("saves the username and email to database", async () => {
+    await validUserRequest();
+    const savedUser: User = await User.find({})[0];
+
+    expect(savedUser.username).toEqual(validUserData.username);
+    expect(savedUser.email).toEqual(validUserData.email);
+  });
+
+  it("hashes the password before db insert", async () => {
+    await validUserRequest();
+    const savedUser: User = await User.find({})[0];
+
+    expect(savedUser.password).not.toEqual(validUserData.password);
   });
 });
