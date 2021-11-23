@@ -1,12 +1,18 @@
-import express from "express";
 import "dotenv-safe/config";
-import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
+import express from "express";
+import { createConnection } from "typeorm";
+import { User } from "./entities/User";
+import routes from "./routers";
+import { getTypeOrmDevConfigOptions } from "./utils/getTypeOrmDevConfigOptions";
+import { getTypeOrmTestConfigOptions } from "./utils/getTypeOrmTestConfigOptions";
 
 export const app = express();
 
 const main = async () => {
-  const connection = await createTypeOrmConnection();
-  await connection.runMigrations();
+  await createConnection(getTypeOrmDevConfigOptions());
+
+  app.use(express.json());
+  app.use(routes);
 
   const port = process.env.PORT;
   app.listen(port, () => {

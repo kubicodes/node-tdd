@@ -1,10 +1,11 @@
-import { app } from "../src/index";
-import { createTypeOrmConnection } from "../src/utils/createTypeOrmConnection";
-import * as request from "supertest";
+import request from "supertest";
+import { createConnection } from "typeorm";
 import { User } from "../src/entities/User";
+import { app } from "../src/index";
+import { getTypeOrmTestConfigOptions } from "../src/utils/getTypeOrmTestConfigOptions";
 
 beforeAll(async () => {
-  await createTypeOrmConnection();
+  await createConnection(getTypeOrmTestConfigOptions());
 });
 
 describe("User Registration", () => {
@@ -21,7 +22,7 @@ describe("User Registration", () => {
   it("returns status code 200 when signup request is valid", async () => {
     const response = await validUserRequest();
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(201);
   });
 
   it("returns success message when signup request is valid", async () => {
@@ -42,7 +43,7 @@ describe("User Registration", () => {
 
   it("saves the username and email to database", async () => {
     await validUserRequest();
-    const savedUser: User = await User.find({})[0];
+    const savedUser: User = (await User.find({}))[0];
 
     expect(savedUser.username).toEqual(validUserData.username);
     expect(savedUser.email).toEqual(validUserData.email);
@@ -50,7 +51,7 @@ describe("User Registration", () => {
 
   it("hashes the password before db insert", async () => {
     await validUserRequest();
-    const savedUser: User = await User.find({})[0];
+    const savedUser: User = (await User.find({}))[0];
 
     expect(savedUser.password).not.toEqual(validUserData.password);
   });
