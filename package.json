@@ -6,9 +6,8 @@
   "scripts": {
     "gen-env": "gen-env-types .env -o src/env.d.ts -e .",
     "watch": "tsc -w",
-    "dev-server": "NODE_ENV=development nodemon dist/index.js",
-    "test-server": "NODE_ENV=test nodemon dist/index.js",
-    "test": "ts-jest --watch"
+    "dev": "NODE_ENV=development nodemon dist/index.js",
+    "test": "NODE_ENV=test jest --watch"
   },
   "repository": {
     "type": "git",
@@ -18,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "argon2": "^0.28.2",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "typeorm": "^0.2.41"
@@ -29,6 +29,7 @@
     "@types/supertest": "^2.0.11",
     "dotenv-safe": "^8.2.0",
     "gen-env-types": "^1.3.0",
+    "jest": "^27.3.1",
     "nodemon": "^2.0.15",
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.7",
