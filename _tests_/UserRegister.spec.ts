@@ -15,6 +15,11 @@ describe("User Registration", () => {
     password: "12345678",
   };
 
+  const userRequest = (user: Record<string, any>) => {
+    console.log("user object in user request ");
+    return request(app).post("/api/v1/users").send(user);
+  };
+
   const validUserRequest = () => {
     return request(app).post("/api/v1/users").send(validUserData);
   };
@@ -54,5 +59,18 @@ describe("User Registration", () => {
     const savedUser: User = (await User.find({}))[0];
 
     expect(savedUser.password).not.toEqual(validUserData.password);
+  });
+
+  it("returns error when E-Mail and Username are null", async () => {
+    const response = await userRequest({
+      username: null,
+      email: null,
+      password: "testpassword",
+    });
+
+    expect(Object.keys(response.body.validationErrors)).toEqual([
+      "email",
+      "username",
+    ]);
   });
 });
